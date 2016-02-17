@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<Project DefaultTargets="Install" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="4.0">
+  <UsingTask TaskName="Nitra.MSBuild.Tasks.InstallVsix" AssemblyFile="$(MSBuildProjectDirectory)\Nitra.MSBuild.Tasks\bin\Debug\Nitra.MSBuild.Tasks.dll" />
+  
+  <Target Name="Install">
+	<InstallVsix VsixPath="$(VsixPath)" RootSuffix="$(RootSuffix)" VisualStudioVersion="$(VisualStudioVersion)" />
+  </Target>
+</Project>

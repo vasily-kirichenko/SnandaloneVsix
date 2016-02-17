@@ -88,6 +88,9 @@ namespace Nitra.MSBuild.Tasks
             using (var esm = ExternalSettingsManager.CreateForApplication(vsExe, rootSuffix))
             {
                 var ems = new ExtensionManagerService(esm);
+                var installed = ems.GetInstalledExtension(vsix.Header.Identifier);
+                if (installed != null)
+                    ems.Uninstall(installed);
                 ems.Install(vsix, perMachine: false);
             }
         }

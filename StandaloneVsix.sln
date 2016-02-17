@@ -5,6 +5,10 @@ VisualStudioVersion = 12.0.40629.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StandaloneVsix", "StandaloneVsix\StandaloneVsix.csproj", "{9B67C5DE-8A67-4561-B9DE-E036112964F4}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nitra.MSBuild.Tasks", "Nitra.MSBuild.Tasks\Nitra.MSBuild.Tasks.csproj", "{593985EE-6308-4079-B6ED-EE844CDFCE5F}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Shell.Interop", "Shell.Interop\Shell.Interop.csproj", "{2AE4160D-F51A-4374-9F40-ECEE109D0F0D}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -15,6 +19,14 @@ Global
 		{9B67C5DE-8A67-4561-B9DE-E036112964F4}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{9B67C5DE-8A67-4561-B9DE-E036112964F4}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{9B67C5DE-8A67-4561-B9DE-E036112964F4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{593985EE-6308-4079-B6ED-EE844CDFCE5F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{593985EE-6308-4079-B6ED-EE844CDFCE5F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{593985EE-6308-4079-B6ED-EE844CDFCE5F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{593985EE-6308-4079-B6ED-EE844CDFCE5F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2AE4160D-F51A-4374-9F40-ECEE109D0F0D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2AE4160D-F51A-4374-9F40-ECEE109D0F0D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2AE4160D-F51A-4374-9F40-ECEE109D0F0D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2AE4160D-F51A-4374-9F40-ECEE109D0F0D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

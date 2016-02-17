@@ -22,36 +22,38 @@ namespace Nitra.MSBuild.Tasks
 
         public string VisualStudioVersion { get; set; }
 
+        class VisualStudio
+        { 
+            public readonly decimal Version;
+            public readonly string ExePath;
+
+            public VisualStudio(decimal version, string exePath)
+            {
+                Version = version;
+                ExePath = exePath;
+            }
+        }
+
         public override bool Execute()
         {
             try
             {
-                var vsVersion = VisualStudioVersion ?? FindVsVersions().LastOrDefault().ToString();
-                if (string.IsNullOrEmpty(vsVersion))
-                    throw new Exception("Cannot find any installed copies of Visual Studio.");
-
-                string vsExe = GetVersionExe(vsVersion);
-                if (string.IsNullOrEmpty(vsExe) && vsVersion.All(char.IsNumber))
-                {
-                    vsVersion += ".0";
-                    vsExe = GetVersionExe(vsVersion);
-                }
-
-                if (string.IsNullOrEmpty(vsExe))
-                {
-                    throw new Exception(string.Format("Cannot find Visual Studio {0}. Detected versions:\n{1}",
-                        vsVersion, string.Join("\n", FindVsVersions().Where(v => !string.IsNullOrEmpty(GetVersionExe(v.ToString()))))));
-                }
-
                 if (!File.Exists(VsixPath))
                     throw new Exception("Cannot find VSIX file " + VsixPath);
 
+                var visualStudios = GetAllVisualStudios();
+                if (visualStudios.Length == 0)
+                    throw new Exception("Cannot find any installed copies of Visual Studio.");
+
                 var vsix = ExtensionManagerService.CreateInstallableExtension(VsixPath);
 
-                Console.WriteLine("Installing {0} version {1} to Visual Studio {2} /RootSuffix {3}",
-                    vsix.Header.Name, vsix.Header.Version, vsVersion, RootSuffix);
+                foreach (var vs in visualStudios)
+                {
+                    Console.WriteLine("Installing {0} version {1} to Visual Studio {2} /RootSuffix {3}",
+                        vsix.Header.Name, vsix.Header.Version, vs.Version, RootSuffix);
 
-                Install(vsExe, vsix, RootSuffix);
+                    Install(vs.ExePath, vsix, RootSuffix);
+                }
                 return true;
             }
             catch (Exception ex)
@@ -61,7 +63,7 @@ namespace Nitra.MSBuild.Tasks
             }
         }
 
-        public static IEnumerable<decimal?> FindVsVersions()
+        static VisualStudio[] GetAllVisualStudios()
         {
             using (var software = Registry.LocalMachine.OpenSubKey("SOFTWARE"))
             using (var ms = software.OpenSubKey("Microsoft"))
@@ -74,21 +76,25 @@ namespace Nitra.MSBuild.Tasks
                         return new decimal?();
                     return v;
                 })
-                .Where(d => d.HasValue)
-                .OrderBy(d => d);
+                .Where(x => x.HasValue)
+                .Select(x => x.Value)
+                .OrderBy(x => x)
+                .Select(version =>
+                    {
+                        var key = @"HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\VisualStudio\" + version + @"\Setup\VS";
+                        var exePath = Registry.GetValue(key, "EnvironmentPath", null) as string;
+                        return exePath != null ? new VisualStudio(version, exePath) : null;
+                    })
+                .Where(x => x != null)
+                .ToArray();
         }
 
-        public static string GetVersionExe(string version)
-        {
-            return Registry.GetValue(@"HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\VisualStudio\" + version + @"\Setup\VS", "EnvironmentPath", null) as string;
-        }
-
-        public static void Install(string vsExe, IInstallableExtension vsix, string rootSuffix)
+        static void Install(string vsExe, IInstallableExtension vsix, string rootSuffix)
         {
             using (var esm = ExternalSettingsManager.CreateForApplication(vsExe, rootSuffix))
             {
                 var ems = new ExtensionManagerService(esm);
-                var installed = ems.GetInstalledExtension(vsix.Header.Identifier);
+                var installed = ems.GetInstalledExtensions().FirstOrDefault(x => x.Header.Identifier == vsix.Header.Identifier);
                 if (installed != null)
                     ems.Uninstall(installed);
                 ems.Install(vsix, perMachine: false);

@@ -5,7 +5,7 @@
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">12.0</VisualStudioVersion>
     <VsSDKInstall>$(MSBuildProjectDirectory)\..\VSSDK\2013</VsSDKInstall>
 	<VsixSchemaPath>$(VsSDKInstall)\Schemas\VSIXManifestSchema.xsd</VsixSchemaPath>
-    <ReferencePath>$(VsSDKInstall)\PublicAssemblies\;$(VsSDKInstall)\</ReferencePath>
+    <ReferencePath>$(VsSDKInstall)\</ReferencePath>
   </PropertyGroup>
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
